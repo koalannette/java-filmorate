@@ -18,11 +18,12 @@ public class FilmController {
     private final HashMap<Integer, Film> films = new HashMap<>();
     private int filmId = 0;
     private final LocalDate minDate = LocalDate.of(1895, 12, 28);
+    
     private int getIdForFilm() {
         return ++filmId;
     }
 
-    @PostMapping("/films")
+    @PostMapping ("/films")
     public Film createFilm (@RequestBody Film film) {
         validateName(film);
         validateDescription(film);
@@ -35,7 +36,7 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping("/films")
+    @PutMapping ("/films")
     public Film updateFilm (@RequestBody Film film) {
         validateName(film);
         validateDescription(film);
@@ -52,7 +53,7 @@ public class FilmController {
         return film;
     }
     
-    @GetMapping("/films")
+    @GetMapping ("/films")
     public List<Film> getFilms() {
         log.info("Запрос всех фильмов");
         return new ArrayList<>(films.values());
