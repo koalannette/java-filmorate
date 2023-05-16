@@ -17,7 +17,7 @@ public class UserControllerTest {
         final User user = new User();
         user.setEmail("email.without.doggie.symbol.com");
 
-        assertThrows(RuntimeException.class, () -> userController.validateDate(user) );
+        assertThrows(RuntimeException.class, () -> userController.validateDate(user));
     }
 
     @Test
@@ -26,7 +26,7 @@ public class UserControllerTest {
         final User user = new User();
         user.setLogin("");
 
-        assertThrows(RuntimeException.class, () -> userController.validateDate(user) );
+        assertThrows(RuntimeException.class, () -> userController.validateDate(user));
     }
 
     @Test
@@ -46,6 +46,6 @@ public class UserControllerTest {
         final User user = new User();
         user.setBirthday(LocalDate.MAX);
 
-        assertThrows(RuntimeException.class, () -> userController.validateDate(user) );
+        assertThrows(RuntimeException.class, () -> userController.validateDate(user));
     }
 }
