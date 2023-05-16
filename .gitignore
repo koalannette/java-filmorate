@@ -1,4 +1,5 @@
 .mvn/
+.mvnv/
 .cmd/
 
 HELP.md
