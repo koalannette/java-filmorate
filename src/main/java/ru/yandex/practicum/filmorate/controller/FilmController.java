@@ -23,7 +23,7 @@ public class FilmController {
     }
 
     @PostMapping ("/films")
-    public Film createFilm(@RequestBody Film film) {
+    public Film createFilm(@RequestBody Film film){
         validateName(film);
         validateDescription(film);
         validateDate(film);
@@ -36,7 +36,7 @@ public class FilmController {
     }
 
     @PutMapping ("/films")
-    public Film updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@RequestBody Film film){
         validateName(film);
         validateDescription(film);
         validateDate(film);
