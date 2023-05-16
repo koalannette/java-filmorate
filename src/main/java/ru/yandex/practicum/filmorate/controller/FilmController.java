@@ -23,8 +23,8 @@ public class FilmController {
         return ++filmId;
     }
 
-    @PostMapping ("/films")
-    public Film createFilm (@RequestBody Film film) {
+    @PostMapping("/films")
+    public Film createFilm(@RequestBody Film film) {
         validateName(film);
         validateDescription(film);
         validateDate(film);
@@ -36,8 +36,8 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping ("/films")
-    public Film updateFilm (@RequestBody Film film) {
+    @PutMapping("/films")
+    public Film updateFilm(@RequestBody Film film) {
         validateName(film);
         validateDescription(film);
         validateDate(film);
@@ -53,7 +53,7 @@ public class FilmController {
         return film;
     }
 
-    @GetMapping ("/films")
+    @GetMapping("/films")
     public List<Film> getFilms() {
         log.info("Запрос всех фильмов");
         return new ArrayList<>(films.values());
