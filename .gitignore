@@ -4,6 +4,7 @@ cmd/
 
 mvnw
 mvnw.cmd
+!*.jar 
 
 HELP.md
 target/
