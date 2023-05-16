@@ -2,8 +2,8 @@
 .mvnv/
 .cmd/
 
-/mvnw
-/mvnw.cmd
+.mvnw
+.mvnw.cmd
 
 HELP.md
 target/
