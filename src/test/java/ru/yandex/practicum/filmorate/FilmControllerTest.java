@@ -17,7 +17,7 @@ public class FilmControllerTest {
         final Film film = new Film();
         film.setName("");
 
-        assertThrows(RuntimeException.class, () -> filmController.validateName(film));
+        assertThrows(RuntimeException.class, () -> filmController.validate(film));
     }
 
     @Test
@@ -29,7 +29,7 @@ public class FilmControllerTest {
                 "Описание для фильма длиной больше 200 символов. Описание для фильма длиной больше 200 символов. Описание для фильма длиной больше 200 символов. " +
                 "Описание для фильма длиной больше 200 символов. Описание для фильма длиной больше 200 символов.");
 
-        assertThrows(RuntimeException.class, () -> filmController.validateDescription(film));
+        assertThrows(RuntimeException.class, () -> filmController.validate(film));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class FilmControllerTest {
         final FilmController filmController = new FilmController();
         final Film film = new Film();
         film.setReleaseDate(LocalDate.MIN);
-        assertThrows(RuntimeException.class, () -> filmController.validateDescription(film));
+        assertThrows(RuntimeException.class, () -> filmController.validate(film));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class FilmControllerTest {
         final FilmController filmController = new FilmController();
         final Film film = new Film();
         film.setDuration(-100);
-        assertThrows(RuntimeException.class, () -> filmController.validateDescription(film));
+        assertThrows(RuntimeException.class, () -> filmController.validate(film));
     }
 
 }

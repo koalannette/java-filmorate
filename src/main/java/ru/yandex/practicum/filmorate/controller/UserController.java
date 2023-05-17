@@ -24,30 +24,22 @@ public class UserController {
 
     @PostMapping("/users")
     public User createUser(@RequestBody User user) {
-        validateEmail(user);
-        validateName(user);
-        validateLogin(user);
-        validateDate(user);
-
+        validate(user);
         user.setId(getIdForFilm());
         users.put(user.getId(), user);
-        log.info("Поступил запрос на добавление пользователя. Пользователь добавлен");
+        log.info("Поступил запрос на добавление пользователя. Пользователь " + user.getId() + " добавлен");
 
         return user;
     }
 
     @PutMapping("/users")
     public User updateUser(@RequestBody User user) {
-        validateEmail(user);
-        validateName(user);
-        validateLogin(user);
-        validateDate(user);
-
+        validate(user);
         if (users.get(user.getId()) != null) {
             users.put(user.getId(), user);
-            log.info("Поступил запрос на изменения пользователя. Пользователь изменён.");
+            log.info("Поступил запрос на изменения пользователя. Пользователь " + user.getId() + " изменён.");
         } else {
-            log.error("Поступил запрос на изменения пользователя. Пользователь не найден.");
+            log.error("Поступил запрос на изменения пользователя. Пользователь " + user.getId() + " не найден.");
             throw new NotFoundException("User not found.");
         }
         return user;
@@ -59,28 +51,22 @@ public class UserController {
         return new ArrayList<>(users.values());
     }
 
-    public void validateEmail(User user) {
+    public void validate(User user) {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             log.warn("Почта некорректная.");
             throw new ValidationException("Почта некорректная.");
         }
-    }
 
-    public void validateLogin(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
+        if (user.getLogin() == null || user.getLogin().isBlank()) {
             log.warn("Логин пользователя пустой.");
             throw new ValidationException("Логин пользователя пустой.");
         }
-    }
 
-    public void validateName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.debug("Имя пользователя пустое. Был использован логин");
         }
-    }
 
-    public void validateDate(User user) {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Дата рождения не может быть в будущем.");
             throw new ValidationException("Дата рождения не может быть в будущем.");
