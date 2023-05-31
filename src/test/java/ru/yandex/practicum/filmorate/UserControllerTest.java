@@ -8,9 +8,8 @@ import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
+// import java.time.LocalDate;
+// import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UserControllerTest {
 
