@@ -14,10 +14,9 @@ import java.util.Set;
 public class Film {
 
     private int id;
-    @NotBlank
-    @NonNull
+    @NotBlank(message = "Название фильма не может быть пустым.")
     private String name;
-    @NonNull
+    @NotBlank
     private String description;
     @NonNull
     private LocalDate releaseDate;

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
@@ -18,13 +19,13 @@ public class FilmController {
     private final FilmService filmService;
 
     @PostMapping("/films")
-    public Film createFilm(@RequestBody Film film) {
+    public Film createFilm(@Validated @RequestBody Film film) {
         log.info("Поступил запрос на добавление фильма.");
         return filmStorage.createFilm(film);
     }
 
     @PutMapping("/films")
-    public Film updateFilm(@RequestBody Film film) {
+    public Film updateFilm(@Validated @RequestBody Film film) {
         log.info("Поступил запрос на изменения фильма.");
         return filmStorage.updateFilm(film);
     }
@@ -36,27 +37,27 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Film getFilm(@PathVariable String id) {
+    public Film getFilm(@PathVariable Integer id) {
         log.info("Поступил запрос на получение фильма");
-        return filmStorage.getFilmById(Integer.parseInt(id));
+        return filmStorage.getFilmById(id);
     }
 
     @PutMapping("/films/{id}/like/{filmId}")
-    public void like(@PathVariable String id, @PathVariable String filmId) {
+    public void like(@PathVariable Integer id, @PathVariable Integer filmId) {
         log.info("Поступил запрос на добавление лайка фильму.");
-        filmService.like(Integer.parseInt(id), Integer.parseInt(filmId));
+        filmService.like(id, filmId);
     }
 
     @DeleteMapping("/films/{id}/like/{filmId}")
-    public void deleteLike(@PathVariable String id, @PathVariable String filmId) {
+    public void deleteLike(@PathVariable Integer id, @PathVariable Integer filmId) {
         log.info("Поступил запрос на удаление лайка у фильма.");
-        filmService.deleteLike(Integer.parseInt(filmId), Integer.parseInt(id));
+        filmService.deleteLike(filmId, id);
     }
 
     @GetMapping("/films/popular")
-    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") String count) {
+    public List<Film> getBestFilms(@RequestParam(defaultValue = "10") Integer count) {
         log.info("Поступил запрос на получение популярных фильмов.");
-        return filmService.showPopularFilms(Integer.parseInt(count));
+        return filmService.showPopularFilms(count);
     }
 }
 

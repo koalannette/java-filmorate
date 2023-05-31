@@ -60,11 +60,6 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void validate(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            log.warn("Название фильма не может быть пустым.");
-            throw new ValidationException("Название фильма не может быть пустым.");
-        }
-
         if (film.getDescription().length() > 200) {
             log.warn("Описание фильма не может быть больше 200 символов.");
             throw new ValidationException("Описание фильма не может быть больше 200 символов.");

@@ -10,19 +10,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class User {
 
     private int id;
-    @Email
-    @NonNull
+    @Email(message = "Почта некорректная.")
+    @NotBlank(message = "Почта не может быть null.")
     private String email;
-    @NotBlank
-    @NonNull
+    @NotBlank(message = "Логин не может быть null.")
     private String login;
-    @NonNull
     private String name;
     @NonNull
     @Past

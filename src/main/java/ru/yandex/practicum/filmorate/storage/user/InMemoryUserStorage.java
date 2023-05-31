@@ -3,10 +3,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,24 +89,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public void validate(User user) {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            log.warn("Почта некорректная.");
-            throw new ValidationException("Почта некорректная.");
-        }
-
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            log.warn("Логин пользователя пустой.");
-            throw new ValidationException("Логин пользователя пустой.");
-        }
-
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
             log.debug("Имя пользователя пустое. Был использован логин");
-        }
-
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Дата рождения не может быть в будущем.");
-            throw new ValidationException("Дата рождения не может быть в будущем.");
         }
     }
 }

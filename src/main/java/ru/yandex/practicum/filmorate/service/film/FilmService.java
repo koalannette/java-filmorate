@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,10 +26,11 @@ public class FilmService {
     }
 
     public void deleteLike(int filmId, int userId) {
-        if (filmStorage.getFilmById(filmId).getLikes().contains(userId)) {
-            filmStorage.getFilmById(filmId).getLikes().remove(userId);
+        Set<Integer> likes = filmStorage.getFilmById(filmId).getLikes();
+        if (likes.contains(userId)) {
+            likes.remove(userId);
         }
-        log.info("У фильма " + filmId + "нет лайка от пользователя " + userId);
+        log.info("У фильма " + filmId + " нет лайка от пользователя " + userId);
     }
 
     public List<Film> showPopularFilms(int quantity) {
