@@ -1,5 +1,7 @@
 # java-filmorate
-Template repository for Filmorate project.
+
+## Database schema
+
 ![Untitled (2)](https://github.com/koalannette/java-filmorate/assets/113180456/2379bbea-8516-486b-864e-eaafff19e0c8)
 
 1. Сущность users содержит информацию о пользователях. В ней хранятся идентификатор пользователя (id), электронная почта (email), логин (login), имя (name) и дата рождения (birthday).
