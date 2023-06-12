@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Film {
 
-    private int id;
+    private long id;
     @NotBlank(message = "Название фильма не может быть пустым.")
     private String name;
     @NotBlank
@@ -22,6 +22,8 @@ public class Film {
     private LocalDate releaseDate;
     @NonNull
     private int duration;
+    private Mpa mpa;
+    private Set<Genre> genres = new HashSet<>();
     @NonNull
     private Set<Integer> likes = new HashSet<>();
 }

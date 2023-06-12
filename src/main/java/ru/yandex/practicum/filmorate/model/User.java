@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class User {
 
-    private int id;
+    private long id;
     @Email(message = "Почта некорректная.")
     @NotBlank(message = "Почта не может быть null.")
     private String email;
