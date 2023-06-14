@@ -27,6 +27,12 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
+
+        String userName = user.getName();
+        if (userName == null || userName.isBlank()) {
+            user.setName(user.getLogin());
+        }
+
         String sqlQuery = "insert into users (email, login, name, birthday)" +
                 "values (?, ?, ?, ?)";
 
@@ -36,7 +42,7 @@ public class UserDbStorage implements UserStorage {
             PreparedStatement stmt = connection.prepareStatement(sqlQuery, new String[]{"id"});
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getLogin());
-            stmt.setString(3, user.getEmail());
+            stmt.setString(3, user.getName());
             stmt.setDate(4, Date.valueOf(user.getBirthday()));
             return stmt;
         }, keyHolder);
@@ -64,6 +70,7 @@ public class UserDbStorage implements UserStorage {
             throw new NotFoundException(String.format("Пользователя с ID %d не существует!", id));
         }
     }
+
     @Override
     public User updateUser(User user) {
         String sqlQuery = "update users set " +
@@ -71,21 +78,64 @@ public class UserDbStorage implements UserStorage {
                 "where id = ?";
 
         if (doesTheUserExist(user.getId())) {
-            jdbcTemplate.update(sqlQuery, user.getEmail(), user.getLogin(), user.getName(),
-                    user.getBirthday(), user.getId());
-
+            jdbcTemplate.update(sqlQuery,
+                    user.getEmail(),
+                    user.getLogin(),
+                    user.getName(),
+                    user.getBirthday(),
+                    user.getId());
             return user;
+
         } else {
             throw new NotFoundException(String.format("Пользователя с ID %d не существует!", user.getId()));
         }
     }
 
+    @Override
+    public void addFriend(User user, User friend) {
+        String sqlQuery = "insert into friends (user_id, friend_id, status)" +
+                "values (?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId(), false);
+    }
+
+    @Override
+    public void deleteFriend(User user, User friend) {
+        String sqlQuery = "delete from friends where user_id = ? and friend_id = ?";
+
+        jdbcTemplate.update(sqlQuery, user.getId(), friend.getId());
+    }
+
+    @Override
+    public List<User> getFriends(long userId) {
+        String sqlQuery = "select * " +
+                "from users " +
+                "where id in " +
+                "(select friend_id " +
+                "from friends " +
+                "where user_id = ?)";
+
+        return jdbcTemplate.query(sqlQuery, this::mapRowToUser, userId);
+    }
+
+    @Override
+    public List<User> getCommonFriends(long userId, long otherId) {
+        String sqlQuery = "select * " +
+                "from users as u " +
+                "join friends as f on u.id = f.friend_id " +
+                "where f.user_id = ? and friend_id in " +
+                "(select friend_id " +
+                "from friends " +
+                "where user_id = ?)";
+
+        return jdbcTemplate.query(sqlQuery, this::mapRowToUser, userId, otherId);
+    }
+
     private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));
-        user.setLogin(rs.getString("email"));
-        user.setName(rs.getString("login"));
-        user.setEmail(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setLogin(rs.getString("login"));
+        user.setName(rs.getString("name"));
         user.setBirthday(rs.getDate("birthday").toLocalDate());
 
         return user;

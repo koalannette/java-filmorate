@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class UserService {
@@ -30,23 +30,40 @@ public class UserService {
         return userStorage.getUsers();
     }
 
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         return userStorage.getUserById(id);
     }
 
-//    public User addFriend(int userId, int friendId) {
-//
-//    }
-//
-//    public User deleteFriend(int userId, int friendId) {
-//
-//    }
-//
-//    public List<User> getFriends(Integer userId) {
-//
-//    }
-//
-//    public List<User> getCommonFriends(int userId, int otherId) {
-//
-//    }
+    public void addFriend(long userId, long friendId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(friendId);
+
+        user.getFriends().add(friendId);
+        friend.getFriends().add(userId);
+
+        userStorage.addFriend(user, friend);
+    }
+
+    public void deleteFriend(long userId, long friendId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(friendId);
+
+        user.getFriends().remove(friendId);
+        friend.getFriends().remove(userId);
+
+        userStorage.deleteFriend(user, friend);
+    }
+
+    public List<User> getFriends(long userId) {
+        User user = userStorage.getUserById(userId);
+        return userStorage.getFriends(user.getId());
+    }
+
+    public List<User> getCommonFriends(long userId, long otherId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(otherId);
+
+        return userStorage.getCommonFriends(user.getId(), friend.getId());
+    }
+
 }

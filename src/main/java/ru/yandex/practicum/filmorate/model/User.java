@@ -24,6 +24,6 @@ public class User {
     @Past
     private LocalDate birthday;
     @NonNull
-    private Set<Integer> friends = new HashSet<>();
+    private Set<Long> friends = new HashSet<>();
 
 }

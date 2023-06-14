@@ -1,17 +1,13 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
@@ -23,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 
 @Repository
-@Primary
 public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
@@ -73,11 +68,13 @@ public class FilmDbStorage implements FilmStorage {
             jdbcTemplate.update(sqlQuery, film.getName(), film.getDescription(), film.getReleaseDate(),
                     film.getDuration(), film.getMpa().getId(), film.getId());
 
-            for (Genre genre : film.getGenres()) {
-                String sqlQuery1 = "insert into films_genres(film_id, genre_id) " +
-                        "values (?, ?)";
-                jdbcTemplate.update(sqlQuery1, film.getId(), genre.getId());
-            }
+//            for (Genre genre : film.getGenres()) {
+//                String sqlQuery1 = "insert into film_genre(film_id, genre_id) " +
+//                        "values (?, ?)";
+//                jdbcTemplate.update(sqlQuery1, film.getId(), genre.getId());
+//            }
+
+            genreStorage.updateGenre(film, film.getGenres());
             return film;
         } else {
             throw new NotFoundException(String.format("Фильма с ID %d не существует!", film.getId()));
@@ -111,6 +108,33 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public void like(Film film, User user) {
+        String sqlQuery = "insert into likes (film_id, user_id)" +
+                "values (?, ?)";
+        jdbcTemplate.update(sqlQuery, film.getId(), user.getId());
+    }
+
+    @Override
+    public void deleteLike(Film film, User user) {
+        String sqlQuery = "delete from likes where film_id = ? and user_id = ? ";
+        jdbcTemplate.update(sqlQuery, film.getId(), user.getId());
+    }
+
+    @Override
+    public List<Film> getBestFilms(int count) {
+        String sqlQuery = "select f.id, f.name, f.description, f.release_date, f.duration, " +
+                "rm.mpa_id, r.name as mpa_name, " +
+                "from films as f " +
+                "left join rating as r on f.mpa_id = r.mpa_id " +
+                "left join likes as l on f.film_id = l.film_id " +
+                "group by f.id " +
+                "order by count(l.user_id) desc " +
+                "limit ?";
+
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
+    }
+
     private Film mapRowToFilm(ResultSet rs, int rowNum) throws SQLException {
         Film film = new Film();
         film.setId(rs.getLong("id"));
@@ -120,7 +144,20 @@ public class FilmDbStorage implements FilmStorage {
         film.setDuration(rs.getInt("duration"));
         film.setMpa(mpaStorage.getMpaById(rs.getInt("mpa_id")));
         film.setGenres(new HashSet<>(genreStorage.getGenresByFilmId(rs.getLong("id"))));
+
+        String likesSql = "select * from likes where film_id = ?";
+        List<Integer> usersCollection = jdbcTemplate.query(likesSql, (rs1, rowNum1) -> makeFilmsLike(rs1), film.getId());
+
+        for (Integer like : usersCollection) {
+            film.getLikes().add(like);
+        }
+
         return film;
+    }
+
+    private Integer makeFilmsLike(ResultSet rs) throws SQLException {
+        Integer userId = rs.getInt("user_id");
+        return userId;
     }
 
 }

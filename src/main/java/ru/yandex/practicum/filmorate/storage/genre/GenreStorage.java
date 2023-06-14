@@ -16,4 +16,7 @@ public interface GenreStorage {
 
     void addGenre(Film film, Set<Genre> genres);
 
+    void updateGenre(Film film, Set<Genre> genres);
+
+    void putGenresForFilm(List<Film> films);
 }

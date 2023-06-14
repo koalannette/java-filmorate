@@ -2,13 +2,13 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +25,12 @@ public class FilmController {
     @PostMapping("/films")
     public Film createFilm(@Validated @RequestBody Film film) {
         log.info("Поступил запрос на добавление фильма.");
-        return filmService.createFilm(film);
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.info("дата релиза — не раньше 28 декабря 1895 года");
+            throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
+        } else {
+            return filmService.createFilm(film);
+        }
     }
 
     @PutMapping("/films")
@@ -41,19 +46,19 @@ public class FilmController {
     }
 
     @GetMapping("/films/{id}")
-    public Film getFilm(@PathVariable Integer id) {
+    public Film getFilm(@PathVariable long id) {
         log.info("Поступил запрос на получение фильма");
         return filmService.getFilmById(id);
     }
 
     @PutMapping("/films/{id}/like/{filmId}")
-    public void like(@PathVariable Integer id, @PathVariable Integer filmId) {
+    public void like(@PathVariable long id, @PathVariable long filmId) {
         log.info("Поступил запрос на добавление лайка фильму.");
         filmService.like(id, filmId);
     }
 
     @DeleteMapping("/films/{id}/like/{filmId}")
-    public void deleteLike(@PathVariable Integer id, @PathVariable Integer filmId) {
+    public void deleteLike(@PathVariable long id, @PathVariable long filmId) {
         log.info("Поступил запрос на удаление лайка у фильма.");
         filmService.deleteLike(filmId, id);
     }
@@ -61,7 +66,7 @@ public class FilmController {
     @GetMapping("/films/popular")
     public List<Film> getBestFilms(@RequestParam(defaultValue = "10") Integer count) {
         log.info("Поступил запрос на получение популярных фильмов.");
-        return filmService.showPopularFilms(count);
+        return filmService.getBestFilms(count);
     }
 }
 
