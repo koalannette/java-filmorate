@@ -14,7 +14,7 @@ target/
 mvn/
 mvnv/
 cmd/
-
+*.DS_Store 
 mvnw
 mvnw.cmd
 !*.jar 
