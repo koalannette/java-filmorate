@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
@@ -31,6 +32,24 @@ public class UserDbStorageTest {
         user.setLogin("aleshka34");
         user.setName("Алексей Алексеевич");
         user.setBirthday(LocalDate.of(1990, 01, 10));
+        return user;
+    }
+
+    private User createTestUser() {
+        User user = new User();
+        user.setEmail("a@.ru");
+        user.setLogin("alex68");
+        user.setName("Alex");
+        user.setBirthday(LocalDate.of(1990, 1, 10));
+        return user;
+    }
+
+    private User createTestUser2() {
+        User user = new User();
+        user.setEmail("i@.ru");
+        user.setLogin("ivan68");
+        user.setName("Ivan");
+        user.setBirthday(LocalDate.of(1995, 4, 6));
         return user;
     }
 
@@ -54,7 +73,7 @@ public class UserDbStorageTest {
     }
 
     @Test
-    void findUserByIdTest() {
+    void getUserByIdTest() {
         User testUser = start();
         userDbStorage.createUser(testUser);
 
@@ -74,6 +93,37 @@ public class UserDbStorageTest {
         testUser.setName("Алеша");
         User newUser = userDbStorage.updateUser(testUser);
         assertEquals(newUser, userDbStorage.getUserById(testUser.getId()));
+    }
+
+    @Test
+    void addFriendsTest() {
+        User user1 = userDbStorage.createUser(createTestUser());
+        User user2 = userDbStorage.createUser(createTestUser2());
+
+        userDbStorage.addFriend(user1, user2);
+        userDbStorage.addFriend(user2, user1);
+
+        List<User> friendsByUser1 = userDbStorage.getFriends(user1.getId());
+        List<User> friendsByUser2 = userDbStorage.getFriends(user2.getId());
+
+        assertTrue(friendsByUser1.contains(user2));
+        assertTrue(friendsByUser2.contains(user1));
+
+    }
+
+    @Test
+    void addCommonFriendsTest() {
+        User user1 = userDbStorage.createUser(createTestUser());
+        User user2 = userDbStorage.createUser(createTestUser2());
+        User user3 = userDbStorage.createUser(start());
+
+        userDbStorage.addFriend(user1, user3);
+        userDbStorage.addFriend(user2, user3);
+
+        List<User> commonFriends = userDbStorage.getCommonFriends(user1.getId(), user2.getId());
+
+        assertTrue(commonFriends.contains(user3));
+
     }
 
 }

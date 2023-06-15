@@ -8,9 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmDbStorage;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +27,7 @@ public class FilmDbStorageTest {
 
     @Autowired
     private final FilmDbStorage filmDbStorage;
+    private final UserStorage userStorage;
 
     private Film start() {
         Film film = new Film();
@@ -34,15 +39,33 @@ public class FilmDbStorageTest {
         return film;
     }
 
+    private User createTestUser() {
+        User user = new User();
+        user.setEmail("a@.ru");
+        user.setLogin("alex68");
+        user.setName("Alex");
+        user.setBirthday(LocalDate.of(1990, 1, 10));
+        return user;
+    }
+
+    private User createTestUser2() {
+        User user = new User();
+        user.setEmail("i@.ru");
+        user.setLogin("ivan68");
+        user.setName("Ivan");
+        user.setBirthday(LocalDate.of(1995, 4, 6));
+        return user;
+    }
+
     @Test
     void addAndGetTest() {
-            Film testFilm = start();
-            filmDbStorage.createFilm(testFilm);
-            assertEquals(1, testFilm.getId());
-            assertEquals("Film 1", testFilm.getName());
-            assertEquals("Film Description", testFilm.getDescription());
-            assertEquals(LocalDate.of(2023, 01, 10), testFilm.getReleaseDate());
-        }
+        Film testFilm = start();
+        filmDbStorage.createFilm(testFilm);
+        assertEquals(1, testFilm.getId());
+        assertEquals("Film 1", testFilm.getName());
+        assertEquals("Film Description", testFilm.getDescription());
+        assertEquals(LocalDate.of(2023, 01, 10), testFilm.getReleaseDate());
+    }
 
     @Test
     void getFilmsTest() {
@@ -76,4 +99,6 @@ public class FilmDbStorageTest {
         assertEquals(newFilm, filmDbStorage.getFilmById(testFilm.getId()));
     }
 
+
 }
+

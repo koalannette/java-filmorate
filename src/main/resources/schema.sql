@@ -37,8 +37,9 @@ mpa_id INTEGER REFERENCES mpa(mpa_id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
-film_id BIGINT REFERENCES films(id),
-user_id BIGINT REFERENCES users(id)
+film_id BIGINT REFERENCES films(id) on delete cascade,
+user_id BIGINT REFERENCES users(id) on delete cascade,
+primary key (film_id, user_id)
 );
 
 CREATE TABLE IF NOT EXISTS genre (
