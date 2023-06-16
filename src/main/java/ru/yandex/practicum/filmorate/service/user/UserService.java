@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 
+
 @Service
 public class UserService {
 
@@ -17,21 +18,53 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-    public User addFriend(int userId, int friendId) {
-        userStorage.addFriend(userId, friendId);
-        return userStorage.getUserById(userId);
+    public User createUser(User user) {
+        return userStorage.createUser(user);
     }
 
-    public User deleteFriend(int userId, int friendId) {
-        userStorage.deleteFriend(userId, friendId);
-        return userStorage.getUserById(userId);
+    public User updateUser(User user) {
+        return userStorage.updateUser(user);
     }
 
-    public List<User> getFriends(Integer userId) {
-        return userStorage.getFriendsByUserId(userId);
+    public List<User> getUsers() {
+        return userStorage.getUsers();
     }
 
-    public List<User> getCommonFriends(int userId, int otherId) {
-        return userStorage.getCommonFriends(userId, otherId);
+    public User getUserById(long id) {
+        return userStorage.getUserById(id);
     }
+
+    public void addFriend(long userId, long friendId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(friendId);
+
+        userStorage.addFriend(user, friend);
+
+        user.getFriends().add(friendId);
+        friend.getFriends().add(userId);
+
+    }
+
+    public void deleteFriend(long userId, long friendId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(friendId);
+
+        user.getFriends().remove(friendId);
+        friend.getFriends().remove(userId);
+
+        userStorage.deleteFriend(user, friend);
+    }
+
+    public List<User> getFriends(long userId) {
+        User user = userStorage.getUserById(userId);
+        return userStorage.getFriends(user.getId());
+    }
+
+    public List<User> getCommonFriends(long userId, long otherId) {
+        User user = userStorage.getUserById(userId);
+        User friend = userStorage.getUserById(otherId);
+
+        return userStorage.getCommonFriends(user.getId(), friend.getId());
+    }
+
 }

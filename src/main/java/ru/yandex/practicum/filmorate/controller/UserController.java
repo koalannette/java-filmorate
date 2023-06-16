@@ -6,7 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
 
@@ -15,53 +14,52 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserStorage userStorage;
     private final UserService userService;
 
     @PostMapping("/users")
     public User createUser(@Validated @RequestBody User user) {
         log.info("Поступил запрос на добавление пользователя.");
-        return userStorage.createUser(user);
+        return userService.createUser(user);
     }
 
     @PutMapping("/users")
     public User updateUser(@Validated @RequestBody User user) {
         log.info("Поступил запрос на изменения пользователя.");
-        return userStorage.updateUser(user);
+        return userService.updateUser(user);
     }
 
     @GetMapping("/users")
     public List<User> getUsers() {
         log.info("Запрос всех пользователей");
-        return userStorage.getUsers();
+        return userService.getUsers();
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable Integer id) {
+    public User getUser(@PathVariable long id) {
         log.info("Поступил запрос на получение пользователя");
-        return userStorage.getUserById(id);
+        return userService.getUserById(id);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
         log.info("Поступил запрос на добавление в друзья.");
-        return userService.addFriend(id, friendId);
+        userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+    public void deleteFriend(@PathVariable long id, @PathVariable long friendId) {
         log.info("Поступил запрос на удаление из друзей.");
         userService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/users/{id}/friends")
-    public List<User> getFriends(@PathVariable Integer id) {
+    public List<User> getFriends(@PathVariable long id) {
         log.info("Поступил запрос на получение друзей.");
         return userService.getFriends(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public List<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
         log.info("Поступил запрос на получение общих друзей.");
         return userService.getCommonFriends(id, otherId);
     }
