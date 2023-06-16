@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
@@ -29,10 +30,13 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public void addGenre(Film film, Set<Genre> genres) {
+
         if (film != null) {
             String sqlQuery = "insert into film_genre (film_id, genre_id) values (?, ?)";
             genres.forEach(genre -> jdbcTemplate.update(sqlQuery, film.getId(), genre.getId()));
             film.setGenres(new HashSet<>(getGenresByFilmId(film.getId())));
+        } else {
+            throw new ValidationException(("Фильм пустой! Повторите попытку"));
         }
     }
 

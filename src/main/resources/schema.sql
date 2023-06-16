@@ -17,7 +17,6 @@ birthday DATE
 CREATE TABLE IF NOT EXISTS friends (
 user_id BIGINT REFERENCES users(id),
 friend_id BIGINT REFERENCES users(id),
-status boolean,
 CONSTRAINT uq_friendship UNIQUE (user_id,friend_id)
 );
 

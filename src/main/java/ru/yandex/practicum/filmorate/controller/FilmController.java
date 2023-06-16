@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import java.time.LocalDate;
@@ -25,11 +26,27 @@ public class FilmController {
     @PostMapping("/films")
     public Film createFilm(@Validated @RequestBody Film film) {
         log.info("Поступил запрос на добавление фильма.");
+
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.info("дата релиза — не раньше 28 декабря 1895 года");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
-        } else {
+        }
+
+        if (film.getGenres() == null || film.getGenres().isEmpty()) {
             return filmService.createFilm(film);
+        } else {
+            for (Genre genreForFilm : film.getGenres()) {
+                    if ((genreForFilm.getId() != null && genreForFilm.getName() == null)
+                            || (genreForFilm.getId() == 1 && genreForFilm.getName() == "Комедия")
+                            || (genreForFilm.getId() == 2 && genreForFilm.getName() == "Драма")
+                            || (genreForFilm.getId() == 3 && genreForFilm.getName() == "Мультфильм")
+                            || (genreForFilm.getId() == 4 && genreForFilm.getName() == "Триллер")
+                            || (genreForFilm.getId() == 5 && genreForFilm.getName() == "Документальный")
+                            || (genreForFilm.getId() == 6 && genreForFilm.getName() == "Боевик")) {
+                    }
+                return filmService.createFilm(film);
+            }
+            throw new ValidationException("Жанр заполнен неверно. Повторите попытку.");
         }
     }
 
