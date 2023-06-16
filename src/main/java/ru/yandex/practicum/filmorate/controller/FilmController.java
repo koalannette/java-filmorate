@@ -31,7 +31,6 @@ public class FilmController {
             log.info("дата релиза — не раньше 28 декабря 1895 года");
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
-;
         if (film.getGenres() == null || film.getGenres().isEmpty()) {
             return filmService.createFilm(film);
         } else {
