@@ -36,14 +36,14 @@ public class FilmController {
             return filmService.createFilm(film);
         } else {
             for (Genre genreForFilm : film.getGenres()) {
-                    if ((genreForFilm.getId() != null && genreForFilm.getName() == null)
-                            || (genreForFilm.getId() == 1 && genreForFilm.getName() == "Комедия")
-                            || (genreForFilm.getId() == 2 && genreForFilm.getName() == "Драма")
-                            || (genreForFilm.getId() == 3 && genreForFilm.getName() == "Мультфильм")
-                            || (genreForFilm.getId() == 4 && genreForFilm.getName() == "Триллер")
-                            || (genreForFilm.getId() == 5 && genreForFilm.getName() == "Документальный")
-                            || (genreForFilm.getId() == 6 && genreForFilm.getName() == "Боевик")) {
-                    }
+                if ((genreForFilm.getId() != null && genreForFilm.getName() == null)
+                        || (genreForFilm.getId() == 1 && genreForFilm.getName() == "Комедия")
+                        || (genreForFilm.getId() == 2 && genreForFilm.getName() == "Драма")
+                        || (genreForFilm.getId() == 3 && genreForFilm.getName() == "Мультфильм")
+                        || (genreForFilm.getId() == 4 && genreForFilm.getName() == "Триллер")
+                        || (genreForFilm.getId() == 5 && genreForFilm.getName() == "Документальный")
+                        || (genreForFilm.getId() == 6 && genreForFilm.getName() == "Боевик")) {
+                }
                 return filmService.createFilm(film);
             }
             throw new ValidationException("Жанр заполнен неверно. Повторите попытку.");
