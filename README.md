@@ -2,7 +2,7 @@
 
 ## Database schema
 
-![Untitled (4)](https://github.com/koalannette/java-filmorate/assets/113180456/e6226858-99c8-48b9-92d7-92eeaa38597b)
+![Untitled (5)](https://github.com/koalannette/java-filmorate/assets/113180456/a109c57c-cf78-4898-911a-06bb01e7eb5e)
 
 1. Сущность users содержит информацию о пользователях. В ней хранятся идентификатор пользователя (id), электронная почта (email), логин (login), имя (name) и дата рождения (birthday).
 
