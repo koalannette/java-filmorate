@@ -41,8 +41,7 @@ public class FilmController {
                         || (genreForFilm.getId() == 3 && genreForFilm.getName() == "Мультфильм")
                         || (genreForFilm.getId() == 4 && genreForFilm.getName() == "Триллер")
                         || (genreForFilm.getId() == 5 && genreForFilm.getName() == "Документальный")
-                        || (genreForFilm.getId() == 6 && genreForFilm.getName() == "Боевик")) {
-                }
+                        || (genreForFilm.getId() == 6 && genreForFilm.getName() == "Боевик"))
                 return filmService.createFilm(film);
             }
             throw new ValidationException("Жанр заполнен неверно. Повторите попытку.");
