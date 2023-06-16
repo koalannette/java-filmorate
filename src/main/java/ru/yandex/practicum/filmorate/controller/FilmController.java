@@ -33,7 +33,7 @@ public class FilmController {
         }
         if (film.getGenres() == null || film.getGenres().isEmpty()) {
             return filmService.createFilm(film);
-        } else {
+        }
             for (Genre genreForFilm : film.getGenres()) {
                 if ((genreForFilm.getId() != null && genreForFilm.getName() == null)
                         || (genreForFilm.getId() == 1 && genreForFilm.getName() == "Комедия")
@@ -46,7 +46,6 @@ public class FilmController {
                 return filmService.createFilm(film);
             }
             throw new ValidationException("Жанр заполнен неверно. Повторите попытку.");
-        }
     }
 
     @PutMapping("/films")
